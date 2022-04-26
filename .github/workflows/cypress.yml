@@ -56,6 +56,12 @@ jobs:
         with:
           path: apps/${{ env.APP_NAME }}
 
+      - name: Install deck frontend dependencies with npm
+        working-directory: apps/deck
+        run: |
+          npm ci
+          TESTING=true npm run build --if-present
+
       - name: Set up php ${{ matrix.php-versions }}
         uses: shivammathur/setup-php@v2
         with:
@@ -79,6 +85,10 @@ jobs:
           export OC_PASS=1234561
           php occ user:add --password-from-env user1
           php occ user:add --password-from-env user2
+          composer install
+          cd apps/deck
+          comnposer install
+          cd ../../
           php occ app:enable deck
           php occ app:list
           curl -v http://nextcloud.local/index.php/login
